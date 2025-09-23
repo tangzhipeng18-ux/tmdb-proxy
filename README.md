@@ -111,7 +111,7 @@ GET /image/w500/jSziioSwPVrOy9Yow3XhWIBDjq1.jpg
 
 ### Emby
 
-1. 进入 **管理** → **库** → **元数据** → **The Movie Database**
+1. 进入 **管理** → **高级** → **神医助手插件** → **元数据增强**（请自行安装神医助手）
 2. 修改 API 服务器地址为您的 Worker URL
 
 ### Plex

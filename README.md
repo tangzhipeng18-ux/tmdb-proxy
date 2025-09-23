@@ -1,65 +1,65 @@
 # TMDB 代理 Worker
 
-一个基于 Cloudflare Workers 的 TMDB API 代理服务，用于解决影视库刮削工具的 TMDB 访问问题。
+一个基于 Cloudflare Workers 的 TMDB API 代理服务，用于解决影视库刮削工具的 TMDB 访问问题。支持完整的 API 代理和图片代理功能。
 
-## 功能特性
+## ✨ 功能特性
 
-- 🔄 **API 代理**：无缝代理 TMDB API 请求
-- 🌐 **CORS 支持**：解决浏览器跨域问题
+- 🔄 **完整 API 代理**：无缝代理所有 TMDB API 请求
+- 🖼️ **图片代理支持**：代理 TMDB 图片资源，解决图片无法加载问题
+- 🌐 **CORS 支持**：完整解决浏览器跨域问题
 - 🔒 **安全认证**：保护您的 TMDB API 密钥
-- ⚡ **快速响应**：基于 Cloudflare 全球网络
-- 🖼️ **图片代理**：支持 TMDB 图片资源代理（可选）
+- ⚡ **全球加速**：基于 Cloudflare 全球边缘网络
+- 💾 **智能缓存**：可配置的缓存策略，减少 API 调用
 
-## 快速开始
+## 🚀 快速部署
 
 ### 前置要求
 
-1. Cloudflare 账户
-2. TMDB API 密钥（[申请地址](https://www.themoviedb.org/settings/api)）
-3. GitHub 账户
+- [x] Cloudflare 账户
+- [x] TMDB API 密钥（[申请地址](https://www.themoviedb.org/settings/api)）
+- [x] GitHub 账户
 
-### 部署步骤
+### 一键部署
 
-1. **Fork 本项目**
-   ```bash
-   git clone https://github.com/your-username/tmdb-proxy-worker.git
-   cd tmdb-proxy-worker
-   ```
-
-2. **配置 GitHub Secrets**
+1. **Fork 本仓库**
+2. **配置 GitHub Secrets**：
    - 进入仓库 Settings → Secrets and variables → Actions
    - 添加以下 Secrets：
      - `CLOUDFLARE_API_TOKEN`：Cloudflare API 令牌
      - `CLOUDFLARE_ACCOUNT_ID`：Cloudflare 账户 ID
      - `TMDB_API_KEY`：您的 TMDB API 密钥
 
-3. **自动部署**
-   - 推送代码到 main 分支将自动触发部署
-   - 查看 Actions 标签页确认部署状态
+3. **自动部署**：推送代码到 main 分支将自动触发部署
 
 ### 手动部署
 
 ```bash
-# 安装 Wrangler
+# 克隆项目
+git clone https://github.com/your-username/tmdb-proxy-worker.git
+cd tmdb-proxy-worker
+
+# 安装依赖
 npm install -g wrangler
 
-# 登录 Cloudflare
-wrangler login
+# 配置环境变量
+export CLOUDFLARE_API_TOKEN="your-api-token"
+export CLOUDFLARE_ACCOUNT_ID="your-account-id"
+export TMDB_API_KEY="your-tmdb-api-key"
 
-# 部署 Worker
+# 部署
 wrangler deploy
 ```
 
-## 使用方法
+## 📖 使用方法
 
-### API 端点
+### 基础 URL
 
-您的 Worker 部署后，基础 URL 为：
+部署成功后，您的 Worker 地址为：
 ```
 https://your-worker-name.your-subdomain.workers.dev
 ```
 
-### 示例请求
+### API 代理示例
 
 **获取电影信息**
 ```
@@ -76,23 +76,49 @@ GET /search/movie?query=avatar
 GET /tv/1399
 ```
 
-### 在刮削工具中配置
+### 图片代理示例
 
-#### Jellyfin
+**海报图片**
+```
+GET /image/t/p/w500/jSziioSwPVrOy9Yow3XhWIBDjq1.jpg
+```
+
+**背景图片**
+```
+GET /image/t/p/original/hZkgoQYus5vegHoetLkCJzb17zJ.jpg
+```
+
+**简化路径**
+```
+GET /image/w500/jSziioSwPVrOy9Yow3XhWIBDjq1.jpg
+```
+
+## 🔧 刮削工具配置
+
+### Jellyfin
+
 1. 进入 **控制台** → **插件** → **TheMovieDb**
-2. 设置 API 地址为您的 Worker URL
-3. 保存设置
+2. 配置：
+   - API 地址：`https://您的worker.workers.dev`
+   - 图片地址：`https://您的worker.workers.dev/image`
 
-#### TinyMediaManager
-1. 进入 **Settings** → **Movies** → **TheMovieDb**
-2. 在 **API URL** 中填写 Worker 地址
-3. 点击 **Test** 验证连接
+### TinyMediaManager
 
-#### Emby
+1. **Settings** → **Movies** → **TheMovieDb**
+2. 配置：
+   - API URL：`https://您的worker.workers.dev`
+   - 图片基础 URL：`https://您的worker.workers.dev/image`
+
+### Emby
+
 1. 进入 **管理** → **库** → **元数据** → **The Movie Database**
-2. 修改 API 服务器地址
+2. 修改 API 服务器地址为您的 Worker URL
 
-## 配置说明
+### Plex
+
+使用 [TMDBMetaDataAgent](https://github.com/ZeroQI/TMDBMetaDataAgent.bundle) 插件，配置代理地址。
+
+## ⚙️ 配置说明
 
 ### 环境变量
 
@@ -102,114 +128,144 @@ GET /tv/1399
 | `CLOUDFLARE_API_TOKEN` | Cloudflare API 令牌 | ✅ |
 | `CLOUDFLARE_ACCOUNT_ID` | Cloudflare 账户 ID | ✅ |
 
-### 自定义配置
-
-修改 `wrangler.toml` 文件：
+### wrangler.toml 配置
 
 ```toml
 name = "tmdb-proxy"
 compatibility_date = "2024-01-01"
 main = "worker.js"
 
-# 自定义路由（可选）
+# 自定义域名（可选）
 routes = [
-  "yourdomain.com/tmdb/*"
+  "tmdb.yourdomain.com/*"
 ]
+
+# 环境变量（通过 GitHub Secrets 设置）
+[env.production.vars]
+TMDB_API_KEY = "{{ secrets.TMDB_API_KEY }}"
 ```
 
-## 开发
+## 🛠️ 开发指南
 
 ### 本地开发
 
 ```bash
-# 启动本地开发服务器
+# 启动开发服务器
 wrangler dev
 
-# 监听文件变化
+# 监听模式
 wrangler dev --live-reload
+
+# 查看日志
+wrangler tail
 ```
 
 ### 项目结构
 
 ```
 tmdb-proxy-worker/
-├── worker.js          # Worker 主代码
-├── wrangler.toml      # 配置文件
+├── worker.js              # Worker 主逻辑
+├── wrangler.toml          # 配置文件
+├── package.json           # 依赖配置
 ├── .github/
 │   └── workflows/
-│       └── deploy.yml # GitHub Actions 工作流
-└── README.md          # 项目文档
+│       └── deploy.yml     # 自动部署工作流
+└── README.md              # 项目文档
 ```
 
-## 故障排除
+## 🐛 故障排除
 
 ### 常见问题
 
-**Q: 部署失败，提示权限错误**
-A: 检查 Cloudflare API 令牌是否具有正确权限（Workers Scripts Edit）
+**❌ 部署失败：权限错误**
+```bash
+# 检查令牌权限
+wrangler whoami
+```
 
-**Q: API 返回 401 错误**
-A: 验证 TMDB API 密钥是否正确配置在环境变量中
+**❌ API 返回 401 错误**
+- 检查 TMDB API 密钥是否正确
+- 验证环境变量配置
 
-**Q: 刮削工具无法连接**
-A: 检查 Worker URL 是否正确，测试直接浏览器访问
+**❌ 图片无法加载**
+- 检查图片代理路径格式
+- 验证图片 URL 是否可公开访问
 
-**Q: 速率限制错误**
-A: TMDB 有 API 调用限制，建议添加缓存或降低请求频率
+**❌ 速率限制错误**
+- TMDB 限制：30-40 请求/10秒
+- 建议添加缓存减少调用
 
-### 查看日志
+### 日志查看
 
 ```bash
-# 查看 Worker 日志
+# 实时日志
 wrangler tail
+
+# 特定环境日志
+wrangler tail --env production
 ```
 
-## 高级功能
+## 🔄 工作流优化
 
-### 图片代理支持
+部署工作流已优化，只在代码文件更改时触发：
 
-启用图片代理功能，修改 `worker.js`：
-
-```javascript
-// 在 fetch 函数中添加图片代理处理
-if (url.pathname.startsWith('/image/')) {
-  const imageUrl = `https://image.tmdb.org/t/p/original${url.pathname.replace('/image', '')}`
-  return fetch(imageUrl)
-}
+```yaml
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'worker.js'
+      - 'wrangler.toml'
+      - 'package.json'
 ```
 
-### 缓存优化
+README 更新不会触发不必要的部署。
 
-添加响应缓存减少 API 调用：
+## 📊 监控和维护
 
-```javascript
-// 缓存 API 响应
-const cacheKey = request.url
-const cache = caches.default
-let response = await cache.match(cacheKey)
+### 性能监控
 
-if (!response) {
-  // 处理请求...
-  response = new Response(response.body, response)
-  response.headers.append('Cache-Control', 's-maxage=3600')
-  ctx.waitUntil(cache.put(cacheKey, response.clone()))
-}
-```
+1. **Cloudflare Dashboard**：查看请求量、错误率
+2. **TMDB 账户**：监控 API 使用情况
+3. **GitHub Actions**：检查部署状态
 
-## 贡献
+### 维护建议
+
+- 定期更新 TMDB API 密钥
+- 监控 API 调用频率
+- 更新 Worker 代码以兼容 API 变更
+
+## 🤝 贡献指南
 
 欢迎提交 Issue 和 Pull Request！
 
-1. Fork 本项目
-2. 创建特性分支 (`git checkout -b feature/AmazingFeature`)
-3. 提交更改 (`git commit -m 'Add some AmazingFeature'`)
-4. 推送到分支 (`git push origin feature/AmazingFeature`)
-5. 开启 Pull Request
+1. Fork 本仓库
+2. 创建功能分支：`git checkout -b feature/新功能`
+3. 提交更改：`git commit -m '添加新功能'`
+4. 推送分支：`git push origin feature/新功能`
+5. 提交 Pull Request
 
-## 许可证
+## 📄 许可证
 
 本项目采用 MIT 许可证 - 查看 [LICENSE](LICENSE) 文件了解详情。
 
-## 免责声明
+## ⚠️ 免责声明
 
-本项目仅用于学习和研究目的，请遵守 TMDB 的 API 使用条款。
+本项目仅用于学习和研究目的，请遵守：
+- [TMDB API 使用条款](https://www.themoviedb.org/documentation/api/terms-of-use)
+- Cloudflare Workers 服务条款
+- 当地法律法规
+
+## 🆘 获取帮助
+
+- [提交 Issue](https://github.com/your-username/tmdb-proxy-worker/issues)
+- [TMDB API 文档](https://developers.themoviedb.org/3)
+- [Cloudflare Workers 文档](https://developers.cloudflare.com/workers/)
+
+---
+
+**如果这个项目对您有帮助，请给个 ⭐️ 支持一下！**
+
+---
+
+*最后更新: 2024年1月*

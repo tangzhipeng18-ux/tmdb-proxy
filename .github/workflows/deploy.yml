@@ -3,8 +3,11 @@ name: 部署到 Cloudflare Workers
 on:
   push:
     branches: [ main ]
-  pull_request:
-    branches: [ main ]
+    paths:
+      - 'worker.js'
+      - 'wrangler.toml'
+      - 'package.json'
+      - '.github/workflows/deploy.yml'
 
 jobs:
   deploy:  # job ID 必须使用英文

@@ -25,7 +25,7 @@
 2. **配置 GitHub Secrets**：
    - 进入仓库 Settings → Secrets and variables → Actions
    - 添加以下 Secrets：
-     - `CLOUDFLARE_API_TOKEN`：Cloudflare API 令牌
+     - `CLOUDFLARE_API_TOKEN`：Cloudflare API 令牌，请选择Cloudflare Workers 模板
      - `CLOUDFLARE_ACCOUNT_ID`：Cloudflare 账户 ID（可选）
      - `TMDB_API_KEY`：您的 TMDB API 密钥
 

@@ -1,4 +1,4 @@
-name: Deploy to Cloudflare Workers
+name: 部署到 Cloudflare Workers
 
 on:
   push:
@@ -7,23 +7,23 @@ on:
     branches: [ main ]
 
 jobs:
-  deploy:
+  部署:
     runs-on: ubuntu-latest
     if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
     
     steps:
-      - name: Checkout code
+      - name: 检出代码
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: 设置 Node.js 环境
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '20'
 
-      - name: Install Wrangler
+      - name: 安装 Wrangler
         run: npm install -g wrangler
 
-      - name: Deploy to Cloudflare Workers
+      - name: 部署到 Cloudflare Workers
         run: |
           wrangler deploy --var TMDB_API_KEY:"${{ secrets.TMDB_API_KEY }}"
         env:

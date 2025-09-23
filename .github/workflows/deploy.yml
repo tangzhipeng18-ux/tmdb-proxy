@@ -7,7 +7,7 @@ on:
     branches: [ main ]
 
 jobs:
-  部署:
+  deploy:  # job ID 必须使用英文
     runs-on: ubuntu-latest
     if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
     

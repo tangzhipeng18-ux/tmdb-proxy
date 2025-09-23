@@ -54,7 +54,7 @@ wrangler deploy
 
 ### 基础 URL
 
-部署成功后，您的 Worker 地址为：
+部署成功后，您可以在worker处设置自定义域，若保持默认，您的 Worker 地址为：
 ```
 https://your-worker-name.your-subdomain.workers.dev
 ```

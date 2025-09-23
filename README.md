@@ -26,7 +26,7 @@
    - 进入仓库 Settings → Secrets and variables → Actions
    - 添加以下 Secrets：
      - `CLOUDFLARE_API_TOKEN`：Cloudflare API 令牌
-     - `CLOUDFLARE_ACCOUNT_ID`：Cloudflare 账户 ID
+     - `CLOUDFLARE_ACCOUNT_ID`：Cloudflare 账户 ID（可选）
      - `TMDB_API_KEY`：您的 TMDB API 密钥
 
 3. **自动部署**：推送代码到 main 分支将自动触发部署
@@ -166,7 +166,7 @@ wrangler tail
 tmdb-proxy-worker/
 ├── worker.js              # Worker 主逻辑
 ├── wrangler.toml          # 配置文件
-├── package.json           # 依赖配置
+├── package.json           # 依赖配置（可选）
 ├── .github/
 │   └── workflows/
 │       └── deploy.yml     # 自动部署工作流
